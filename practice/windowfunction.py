@@ -28,8 +28,8 @@ if __name__ == '__main__':
 
     columns = ["employee_name", "department", "salary"]
     df = spark.createDataFrame(data=simpleData, schema=columns)
-    # df.printSchema()
-    # df.show(truncate=False)
+    df.printSchema()
+    df.show(truncate=False)
 
     # row_number() window function is used to give the sequential row number starting from 1 to the result of each window partition.
     windowspec = Window.partitionBy("department").orderBy("salary")
@@ -54,3 +54,8 @@ if __name__ == '__main__':
         .withColumn("avg",avg(col("salary")).over(windowspec))\
         .withColumn("sum",sum(col("salary")).over(windowspec))\
         .select("department","avg","sum").show()
+
+
+    # aggregate functions
+    # approx_count_distinct()
+    df.select(approx_count_distinct("salary")).show()
